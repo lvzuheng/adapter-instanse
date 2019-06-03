@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="300 seconds">
+    <property name="LOG_FILE_FRAME" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />  <!-- 文件输出格式 -->
+    <property name="LOG_FILE_PATH" value="./logs" />                                                                     <!-- test文件路径 -->
+    <property name="PROJECT_NAME" value="standard-plugin"/>
+
+    <!-- dev -->
+    <springProfile name="dev">
+        <appender name="com.group.dev.log.out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <!-- log file path -->
+            <file>${LOG_FILE_PATH}/trace_log_dev.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE_PATH}/${PROJECT_NAME}_dev.%d{yyyy-MM-dd}.log.zip</fileNamePattern>    <!-- 文件名称 -->
+                <MaxHistory>7</MaxHistory>                                                                      <!-- 文件最大保存历史数量 -->
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${LOG_FILE_FRAME}</pattern>
+            </layout>
+        </appender>
+
+        <!--<logger name="com.cetc.cloud" level="debug"/>-->
+        <root level="info">
+            <appender-ref ref="com.group.dev.log.out" />
+        </root>
+    </springProfile>
+
+    <!-- test -->
+    <springProfile name="test">
+        <appender name="com.group.test.log.out" class="ch.qos.logback.core.rolling.RollingFileAppender">        <!-- 每天产生一个文件 -->
+
+            <!-- log file path -->
+            <file>${LOG_FILE_PATH}/trace_log_test.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE_PATH}/${PROJECT_NAME}_test.%d{yyyy-MM-dd}.log.zip</fileNamePattern>   <!-- 文件名称 -->
+                <MaxHistory>7</MaxHistory>                                                                      <!-- 文件最大保存历史数量 -->
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${LOG_FILE_FRAME}</pattern>
+            </layout>
+        </appender>
+
+        <root level="info">
+            <appender-ref ref="com.group.test.log.out" />
+        </root>
+    </springProfile>
+
+    <!-- release -->
+    <springProfile name="release">
+        <appender name="com..group.release.log.out" class="ch.qos.logback.core.rolling.RollingFileAppender">     <!-- 每天产生一个文件 -->
+
+            <!-- log file path -->
+            <file>${LOG_FILE_PATH}/trace_log_release.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE_PATH}/${PROJECT_NAME}_release.%d{yyyy-MM-dd}.log.zip</fileNamePattern> <!-- 文件名称 -->
+                <MaxHistory>7</MaxHistory>                                                                       <!-- 文件最大保存历史数量 -->
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${LOG_FILE_FRAME}</pattern>
+            </layout>
+        </appender>
+
+        <root level="error">
+            <appender-ref ref="com.group.release.log.out" />
+        </root>
+    </springProfile>
+</configuration>

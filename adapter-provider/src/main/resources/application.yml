@@ -1,0 +1,131 @@
+server:
+  port: 9030
+  context-path: /
+#  address: ${spring.cloud.client.ipAddress}
+  connection-timeout: 60000
+  session:
+    timeout: 60000
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka-master:IaaS-82}:${eureka_port:30000}/eureka, http://${eureka-slaver:IaaS-86}:${eureka_port:30000}/eureka
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    prefer-ip-address: true
+
+hystrix:
+  command:
+    default:
+      circuitBreaker:
+        sleepWindowInMilliseconds: 30000
+        requestVolumeThreshold: 10
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 100000
+
+spring:
+  profiles:
+    active: dev
+  output:
+    ansi:
+      enabled: detect
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+  messages:
+    basename: i18n/messages
+    cache-seconds: -1
+    encoding: utf-8
+  zipkin:
+      base-url: http://${zipkin.com:zipkin.com}:${zipkin_port:18100}/
+  sleuth:
+    sampler:
+        percentage: 1.0
+    feign:
+      enabled: true
+    hystrix:
+      strategy:
+          enabled: true
+    zuul:
+      enabled: true
+
+  freemarker:
+    allow-request-override: false
+    allow-session-override: false
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: true
+    prefer-file-system-access: true
+    suffix: .html
+    template-loader-path: classpath:/templates/
+    settings:
+     output_format: HTMLOutputFormat
+     template_update_delay: 0
+     default_encoding: UTF-8
+     url_escaping_charset: UTF-8
+     classic_compatible: true
+     number_format: ###
+
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+
+  datasource:
+    url: jdbc:mysql://10.124.206.81:3306/imdb_0?characterEncoding=utf8&useSSL=false
+    username: iotuser
+    password: tcluser123
+    driverClassName: com.mysql.jdbc.Driver
+    max-active: 20
+    max-idle: 8
+    min-idle: 8
+    initial-size: 10
+  jpa:
+    database: MYSQL
+    show-sql: true
+# 服务启动时提前加载，饥饿加载模式启用
+#ribbon:
+#  eager-load:
+#    enabled: true
+#    clients: id-generator
+zuul:
+  ribbon-isolation-strategy: semaphore
+
+---
+#logging:
+#  config: classpath:logback-springboot.xml
+  #MQTT配置信息
+  #MQTT-服务器连接地址，如果有多个，用逗号隔开，如：tcp://127.0.0.1:61613，tcp://192.168.2.133:61613
+ mqtt:
+  host: tcp://192.168.158.135:1883
+  #MQTT-连接服务器默认客户端ID
+  clientid: mqtt_client_4c9j3w5c0n1m
+  #MQTT-用户名
+  username: test
+  #MQTT-密码
+  password: test
+  #MQTT-默认的消息推送主题，实际可在调用接口时指定
+  topic[0]:
+    name: sys/mapper/#
+    qos: 1
+  topic[1]:
+    name: dev/#
+    qos: 2
+  #连接超时
+  timeout: 1000
+  keepalive: 20
+
+
